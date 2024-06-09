@@ -14,7 +14,11 @@ const response = await ollama.chat({
   messages: [
     { role: 'user', content: '日本語は喋れますか？' },
     { role: 'assistant', content: 'はい、ここからの質問は日本語でお答えいたします。' },
-    { role: 'user', content: 'あなたのような小規模言語モデルはどのような場面での利用が適してますか？' }
+    {
+      role: 'user', content: `
+        あなたは小規模言語モデルですか？
+        また小規模言語モデルは、データを自社内に保持したいことがある規制産業や部門にとって有効とありますが、それはなぜでしょうか？`
+    }
   ],
 })
 
