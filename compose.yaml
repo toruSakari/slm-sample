@@ -13,9 +13,6 @@ services:
   ollama:
     container_name: ollama_container
     image: ollama/ollama
-    # build:
-    #   context: ./ollama
-    #   dockerfile: Dockerfile
     ports:
       - 11434:11434
     volumes:
