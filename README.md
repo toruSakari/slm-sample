@@ -23,6 +23,9 @@ docker exec -it server_container
 yarn start
 ````
 
+Open the url below
+[[http://localhost/](http://localhost/)]
+
 ## Example of answer
 
 ### Ask
