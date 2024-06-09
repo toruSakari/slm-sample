@@ -1,0 +1,29 @@
+services:
+  server:
+    container_name: server_container
+    image: node:latest
+    ports:
+      - 80:80
+    volumes:
+      - ./server:/var/www/app
+    working_dir: /var/www/app
+    networks:
+      - ollama-network
+    tty: true
+  ollama:
+    container_name: ollama_container
+    image: ollama/ollama
+    # build:
+    #   context: ./ollama
+    #   dockerfile: Dockerfile
+    ports:
+      - 11434:11434
+    volumes:
+      - ollama:/root/.ollama
+    networks:
+      - ollama-network
+networks:
+  ollama-network:
+    driver: bridge
+volumes:
+  ollama:
