@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <style>
+    @keyframes bounce {
+      0% {
+        transform: scale(1);
+      }
+          50% {
+        transform: scale(2);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+    #result {
+      width: 500px;
+      white-space: pre-wrap;
+    }
+    #result[aria-busy="true"]::after {
+      content: "";
+      display: inline-block;
+      margin-left: 5px;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #000;
+      animation: bounce 1s ease-in-out infinite;
+    }
+  </style>
+  <form>
+    <textarea name="prompt" id="prompt"></textarea>
+    <button type="submit">送信</button>
+  </form>
+  <div>
+    <pre aria-busy="false" id="result"></pre>
+  </div>
+  <script>
+    const result = document.querySelector('#result')
+    const ws = new WebSocket('ws:localhost:80/webSocket')
+
+    let isOpen = false
+    let messageDone = true
+
+    ws.onopen = (event) => {
+      isOpen = true
+    };
+
+    ws.onmessage = e => {
+      const { message, done } = JSON.parse(e.data)
+      result.textContent = result.textContent + message
+      result.setAttribute('aria-busy', !done)
+    }
+
+    const handleSubmit = e => {
+      e.preventDefault()
+
+      if(!isOpen) {
+        alert('まだ接続できてない')
+        return
+      }
+
+      const formData = new FormData(e.target)
+      const prompt = formData.get('prompt')
+
+      if(!prompt)  return
+
+      if(result.getAttribute('aria-busy') === 'true') {
+        ws.send('cancel')
+      }
+
+      result.textContent = ''
+
+      ws.send(prompt)
+
+      result.setAttribute('aria-busy', true)
+    }
+
+    document.querySelector('form').addEventListener('submit', handleSubmit)
+  </script>
+</body>
+</html>
